@@ -1,0 +1,23 @@
+{
+  "name": "juego-de-cartas",
+  "version": "1.0.0",
+  "description": "Pequeño proyecto de ejemplo: una interfaz web para un juego de cartas. El repositorio contiene una página estática (`index.html`) y estilos (`styles.css`).",
+  "scripts": { 
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html --dist-dir build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ricardo2033/Juego-de-cartas-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ricardo2033/Juego-de-cartas-/issues"
+  },
+  "homepage": "https://github.com/Ricardo2033/Juego-de-cartas-#readme",
+  "devDependencies": {
+    "parcel": "^2.16.0"
+  }
+}

@@ -1,0 +1,17 @@
+@font-face {
+    font-family: "proyecto";
+    src: url(fonts/CinzelDecorative-Regular.ttf);
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "proyecto";
+    src: url(fonts/CinzelDecorative-Black.ttf);
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: "proyecto";
+    src: url(fonts/CinzelDecorative-Bold.ttf);
+    font-weight: 300;
+}
