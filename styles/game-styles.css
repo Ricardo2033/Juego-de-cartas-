@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #1a1a1a;
+  background-color:#30211D;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -29,15 +29,15 @@ body {
 .fila-enemigo {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
-  height: 18vh;
+  gap: 20px; 
+  height: 18vh; 
   width: 100%;
 }
 
 
 /* Espacio central */
 .zona-central {
-  height: 20vh;
+  height: 1vh;
   width: 100%;
 }
 
@@ -68,12 +68,18 @@ body {
   box-shadow: 0 0 10px #444;
   transition: transform 0.2s;
   width: 100%;
-  height: 110%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
+
 
 .casilla:hover {
   transform: scale(1.05);
   border-color: #fff;
+  box-shadow: 0 12px 20px rgba(255, 255, 255, 0.3);
 }
 
 .fila-enemigo .casilla {
@@ -85,15 +91,6 @@ body {
 }
 
 /* Cartas en mano */
-.casilla-mano {
-  width: 12vw;
-  height: 16vh;
-  background-color: #1e1e1e;
-  border: 2px solid #aaa;
-  border-radius: 6px;
-  box-shadow: 0 0 8px #666;
-  transition: transform 0.2s;
-}
 
 .carta-mano:hover {
   transform: scale(1.1);
@@ -101,17 +98,497 @@ body {
 }
 
 .casilla-mano {
-  width: 100px;
-  height: 150px;
+  width: 180px;
+  height: 160px;
   border: 2px solid #aaa;
   background-color: #1e1e1e;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: visible; /* ← importante para que se vea el levantamiento */
+  position: relative;
+  transition: transform 0.3s ease;
+  margin: 10px;
+}
+
+.mano-jugador .casilla-mano:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 20px rgba(255, 255, 255, 0.3);
+  z-index: 10;
+  cursor: pointer;
 }
 
 .carta-mano-img {
   width: 100%;
   height: 100%;
 }
+
+.carta-mano-img:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 12px 20px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+
+/* Vista ampliada de la carta */
+.vista-ampliada {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  width: 500px;
+  height: auto;
+  background: radial-gradient(circle, #222 0%, #000 100%);
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: invocarCarta 0.4s ease-out forwards;
+}
+
+.vista-ampliada img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.vista-ampliada img:hover {
+  transform: scale(1.05);
+}
+
+@keyframes invocarCarta {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.oculto {
+  display: none;
+}
+
+@keyframes repartirEstiloYugi {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3) rotate(-30deg);
+    box-shadow: 0 0 0 transparent;
+  }
+  50% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1.1) rotate(5deg);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  }
+}
+
+.carta-mano-img.repartida {
+  animation: repartirEstiloYugi 0.6s ease-out forwards;
+  transform-origin: center center;
+}
+
+.carta-mano-img.seleccionada {
+  outline: 3px solid #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+.carta-tablero {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+}
+
+#pantalla-combate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 100%);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+
+.combate-oculto {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carta-combate {
+  width: 60vw; /* antes 300px */
+  height: 80vh; /* antes 400px */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 6px solid #fff;
+  box-shadow: 0 0 40px #fff;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+
+@keyframes vibrar {
+  0%   { transform: translateX(0); }
+  5%   { transform: translateX(-20px); }
+  10%  { transform: translateX(20px); }
+  15%  { transform: translateX(-25px); }
+  20%  { transform: translateX(25px); }
+  25%  { transform: translateX(-18px); }
+  30%  { transform: translateX(18px); }
+  35%  { transform: translateX(-15px); }
+  40%  { transform: translateX(15px); }
+  45%  { transform: translateX(-10px); }
+  50%  { transform: translateX(10px); }
+  55%  { transform: translateX(-6px); }
+  60%  { transform: translateX(6px); }
+  65%  { transform: translateX(-4px); }
+  70%  { transform: translateX(4px); }
+  75%  { transform: translateX(-2px); }
+  80%  { transform: translateX(2px); }
+  85%  { transform: translateX(-1px); }
+  90%  { transform: translateX(1px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes girarDesaparecer {
+  0%   { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
+  100% { transform: scale(0.1) rotate(1080deg); opacity: 0; filter: blur(12px); }
+}
+
+.carta-derrotada {
+  animation: vibrar 0.25s ease-in-out, girarDesaparecer 0.6s ease-out 0.25s;
+  animation-fill-mode: forwards; 
+  pointer-events: none;        
+}
+
+
+
+
+
+
+.casilla-ia-hover {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  animation: parpadeoIAHover 0.4s ease-in-out;
+}
+
+@keyframes parpadeoIAHover {
+  0% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
+  100% { box-shadow: 0 0 20px transparent; }
+}
+
+/* Jugador */
+.activa-jugador {
+  box-shadow: 0 0 20px 5px #00ff00;
+  outline: 4px solid #00ff00;
+  animation: pulsoJugador 0.6s infinite alternate;
+}
+
+.casilla-objetivo-jugador {
+  box-shadow: 0 0 20px 5px #ffa500;
+  outline: 4px solid #ffa500;
+  animation: parpadeoJugador 0.6s infinite alternate;
+}
+
+/* IA */
+.carta-ia-activa {
+  box-shadow: 0 0 20px 5px #00ffff;
+  outline: 4px solid #00ffff;
+  animation: pulsoIA 0.6s infinite alternate;
+}
+
+.casilla-objetivo-ia {
+  box-shadow: 0 0 20px 5px #ff0000;
+  outline: 4px solid #ff0000;
+  animation: parpadeoObjetivo 0.6s infinite alternate;
+}
+
+/* Animaciones */
+@keyframes pulsoJugador {
+  from { outline-color: #00ff00; }
+  to { outline-color: #009900; }
+}
+
+@keyframes parpadeoJugador {
+  from { outline-color: #ffa500; }
+  to { outline-color: #ffcc00; }
+}
+
+@keyframes pulsoIA {
+  from { outline-color: #00ffff; }
+  to { outline-color: #0077ff; }
+}
+
+@keyframes parpadeoObjetivo {
+  from { outline-color: #ff0000; }
+  to { outline-color: #ff6600; }
+}
+
+
+.casilla-jugador-activa {
+  outline: 4px solid #00ff00;
+  box-shadow: 0 0 20px 5px #00ff00;
+  animation: pulsoJugador 0.6s infinite alternate;
+}
+
+.casilla-ia-activa {
+  outline: 4px solid #00ffff;
+  box-shadow: 0 0 20px 5px #00ffff;
+  animation: pulsoIA 0.6s infinite alternate;
+}
+
+#timer{
+  font-family: "proyecto";
+  color: gold;
+  font-size: 30px;
+}
+
+#pantalla-final {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 2s ease-in;
+}
+
+#mensaje-final {
+  font-size: 0;
+  color: white;
+  font-weight: bold;
+  transition: font-size 2s ease-out, opacity 2s ease-out;
+  opacity: 0;
+}
+
+#puntos-container{
+  color: gold;
+  font-family: "proyecto";
+  font-size: 28px;
+}
+
+#puntos-jugador #puntos-ia{
+  color: gold;
+}
+
+#pantalla-inicio {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 1;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 2s ease-out;
+}
+
+#pantalla-inicio h1 {
+  color: white;
+  font-size: 0;
+  opacity: 0;
+  transition: font-size 2s ease-out, opacity 2s ease-out;
+}
+
+@keyframes entrada-suave {
+  0% {
+    transform: scale(0.5) rotate(-10deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.carta-mano-img.repartida {
+  animation: entrada-suave 0.4s ease-out;
+}
+
+@keyframes entrada-ia {
+  0% {
+    transform: translateY(-20px) scale(0.8);
+    opacity: 0;
+    filter: brightness(0.5);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+.mano-enemigo .carta-mano-img.repartida {
+  animation: entrada-ia 0.5s ease-out;
+}
+
+@media screen and (max-width: 600px) {
+  body {
+    flex-direction: column;
+    padding: 5px;
+    overflow-y: auto;
+  }
+
+  .mano-enemigo,
+  .mano-jugador {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 5px;
+  }
+
+  .fila-enemigo,
+  .fila-jugador {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    height: auto;
+  }
+
+  .casilla,
+  .casilla-mano {
+    height: 120px;
+    width: 100%;
+    margin: 5px;
+  }
+
+  .carta-combate {
+    width: 90vw;
+    height: 50vh;
+  }
+
+  #timer {
+    font-size: 20px;
+  }
+
+  #puntos-container {
+    font-size: 20px;
+  }
+
+  .vista-ampliada {
+    width: 90vw;
+    padding: 10px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  body {
+    padding: 20px;
+  }
+
+  .mano-enemigo,
+  .mano-jugador {
+    gap: 20px;
+    height: 18vh;
+  }
+
+  .fila-enemigo,
+  .fila-jugador {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 30px;
+    height: 22vh;
+  }
+
+  .casilla,
+  .casilla-mano {
+    height: 240px;
+    max-width: 200px;
+  }
+
+  .carta-combate {
+    width: 50vw;
+    height: 70vh;
+  }
+
+  #timer {
+    font-size: 40px;
+  }
+
+  #puntos-container {
+    font-size: 36px;
+  }
+
+  .vista-ampliada {
+    width: 700px;
+    padding: 24px;
+  }
+}
+
+@media screen and (min-width: 1280px) and (max-width: 1439px) {
+  body {
+    padding: 16px;
+  }
+
+  .mano-enemigo,
+  .mano-jugador {
+    gap: 16px;
+    height: 17vh;
+  }
+
+  .fila-enemigo,
+  .fila-jugador {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    height: 20vh;
+  }
+
+  .casilla,
+  .casilla-mano {
+    height: 220px;
+    max-width: 180px;
+  }
+
+  .carta-combate {
+    width: 55vw;
+    height: 75vh;
+  }
+
+  #timer {
+    font-size: 34px;
+  }
+
+  #puntos-container {
+    font-size: 30px;
+  }
+
+  .vista-ampliada {
+    width: 600px;
+    padding: 20px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
