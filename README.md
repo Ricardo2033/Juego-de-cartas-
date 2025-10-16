@@ -171,6 +171,7 @@ Si quieres, puedo crear los siguientes cambios ahora:
 - Añadir un README más detallado con reglas del juego y ejemplos.
 
 Indica qué prefieres y lo hago.
+mt03
 
 ---
 Licencia: MIT
